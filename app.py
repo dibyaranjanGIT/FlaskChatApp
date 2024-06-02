@@ -3,18 +3,35 @@ import boto3
 import json
 import os
 
-from dotenv import load_dotenv
+# Function to get secrets from AWS Secrets Manager
+def get_secret(secret_name):
+    region_name = os.getenv('AWS_REGION', 'ap-south-1')  # Default region if not set
 
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
 
-# Load environment variables from .env file
-load_dotenv()
+    try:
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+    except Exception as e:
+        raise e
+
+    # Decrypts secret using the associated KMS key.
+    secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
+
+# Load secrets
+secrets = get_secret('bedrock_secret')
+AWS_ACCESS_KEY = secrets['AWS_ACCESS_KEY']
+AWS_SECRET_KEY = secrets['AWS_SECRET_KEY']
+AWS_REGION = secrets['AWS_REGION']
+
 
 app = Flask(__name__)
 
-# Load AWS credentials from environment variables
-AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
-AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
-AWS_REGION = os.getenv('AWS_REGION')
 
 # Initialize Boto3 client for Bedrock
 client = boto3.client(
