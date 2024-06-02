@@ -54,7 +54,7 @@ def chat():
 
     # Call Bedrock service to interact with Mistral 7B Instruct model
     response = client.invoke_endpoint(
-        EndpointName='your_bedrock_endpoint',  # Replace with your actual endpoint name
+        EndpointName='mistral-7b-instruct',  # Replace with your actual endpoint name
         ContentType='application/json',
         Body=json.dumps({
             'input': user_input,
