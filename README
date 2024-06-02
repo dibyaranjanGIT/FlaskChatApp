@@ -1,0 +1,30 @@
+# Flask Chat App with Amazon Bedrock and AWS Secrets Manager
+
+This Flask chat application interacts with the Mistral 7B Instruct model via Amazon Bedrock. It securely retrieves AWS credentials from AWS Secrets Manager to interact with the model.
+
+## Features
+
+- Chat interface to interact with the Mistral 7B Instruct model
+- Secure handling of AWS credentials using AWS Secrets Manager
+- Containerized using Docker for easy deployment
+
+## Prerequisites
+
+- Python 3.9 or higher
+- Docker and Docker Compose
+- AWS account with access to Amazon Bedrock and Secrets Manager
+
+## Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/flask-chat-app.git
+cd flask-chat-app
+
+
+# BUILD USING DOCKER
+docker build -t flask-chat-app .
+
+docker-compose up --build
+
