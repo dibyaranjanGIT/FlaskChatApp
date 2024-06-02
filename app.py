@@ -48,24 +48,27 @@ def index():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.json.get('message')
-    if not user_input:
-        return jsonify({"error": "No message provided"}), 400
+    try:
+        user_input = request.json.get('message')
+        if not user_input:
+            return jsonify({"error": "No message provided"}), 400
 
-    # Call Bedrock service to interact with Mistral 7B Instruct model
-    response = client.invoke_endpoint(
-        EndpointName='mistral-7b-instruct',  # Replace with your actual endpoint name
-        ContentType='application/json',
-        Body=json.dumps({
-            'input': user_input,
-            'parameters': {
-                'model': 'mistral-7b-instruct'  # Specify the Mistral 7B Instruct model
-            }
-        })
-    )
+        # Call Bedrock service to interact with Mistral 7B Instruct model
+        response = client.invoke_endpoint(
+            EndpointName='mistral-7b-instruct',  # Replace with your actual endpoint name
+            ContentType='application/json',
+            Body=json.dumps({
+                'input': user_input,
+                'parameters': {
+                    'model': 'mistral-7b-instruct'  # Specify the Mistral 7B Instruct model
+                }
+            })
+        )
 
-    result = response['Body'].read().decode('utf-8')
-    return jsonify({"response": result})
+        result = response['Body'].read().decode('utf-8')
+        return jsonify({"response": result})
+    except Exception as e:
+        print("Error occured in /chat", str(e))
 
 if __name__ == '__main__':
     app.run(debug=True)
